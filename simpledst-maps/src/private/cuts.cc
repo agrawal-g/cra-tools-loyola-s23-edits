@@ -140,7 +140,7 @@ bool ITNstatCut(SimpleDST dst, double smin, double smax) {
   if (!(smax > 0))
     return (dst.nStations >=smin);
     
-  return ( (dst.nStations >=smin) && (dst.nStations <=smax));
+  return ( (dst.nStations >=smin) && (dst.nStations < smax));
 
 }
 

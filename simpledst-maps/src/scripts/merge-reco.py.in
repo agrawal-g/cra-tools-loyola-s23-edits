@@ -58,7 +58,7 @@ if __name__ == "__main__":
 
     # Additional options
     p.add_argument('-o', '--outdir', dest='outdir',
-            default='@CRA_BUILD@/maps',
+            default='/data/ana/CosmicRay/Anisotropy/IceTop/ITpass2/output/USER_SPECIFIC_DIR/ITpass2_sd',
             help='Destination directory for output files')
     p.add_argument('-i', '--indir', dest='indir',
             default=None,
@@ -70,10 +70,10 @@ if __name__ == "__main__":
             default=False, action='store_true',
             help='Option to overwrite existing map files')
     p.add_argument('--cvmfs', dest='cvmfs',
-            default='@CVMFS_SROOTBASE@',
+            default='/cvmfs/icecube.opensciencegrid.org/py3-v4.2.1',
             help='CVMFS environment')
     p.add_argument('--submit_dir', dest='submit_dir',
-            default='@CRA_BUILD@/submit-dir',
+            default='/home/USER_SPECIFIC_DIR/cra-tools-gb-edits/simpledst-maps/src/submit',
             help='submit directory')
     p.add_argument('--elogmax', dest='elogmax',type=float,
             default=0.0,
@@ -209,7 +209,7 @@ if __name__ == "__main__":
 
         outfile = infile.format(**s_opts,degbin=degbin)
         jobID = 'combinelocalmaps_%s_%05i_%05i' % (args.config, degbin, random.randint(0,99999))
-        cmd  = '@CRA_BUILD@/bin/combine-local-maps' 
+        cmd  = '/home/gagrawal/cra-tools-gb-edits/simpledst-maps/build/bin/combine-local-maps' 
         #ex = [cmd] + c_opts + ['--outfile','{}/combined/{}'.format(outBase,outfile), '--input', " ".join(filelist) ]
         ex = [cmd] + c_opts + ['--outfile','{}/combined/{}'.format(outBase,outfile), '--input'] +filelist
         #ex = [cmd, c_opts,'--outfile','{}/combined/{}'.format(outBase,outfile), '--input', " ".join(filelist) ]
@@ -221,9 +221,9 @@ if __name__ == "__main__":
     if args.reco:
 
         reco_prefix = infile_prefix.format(**s_opts)
-        cmd  = '@CRA_BUILD@/bin/illh-reco'
+        cmd  = '/home/gagrawal/cra-tools-gb-edits/simpledst-maps/build/bin/illh-reco'
         ex  = [cmd, 
-            '--cfg','@CRA_BUILD@/resources/{detector}.json'.format(**s_opts),
+            '--cfg','/home/gagrawal/cra-tools-gb-edits/simpledst-maps/build/resources/{detector}.json'.format(**s_opts),
             '--prefix','{}/combined/{}'.format(outBase,reco_prefix), 
             '--suffix','.fits.gz',
             '--outdir','{}/reco'.format(outBase),

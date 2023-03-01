@@ -15,7 +15,7 @@ the word 'CHANGE'.
 
 def getDSTfiles(config):
 
-    fpath = '/data/user/gbratrud/dst_data'
+    fpath = '/data/ana/CosmicRay/Anisotropy/IceTop/ITpass2'
     fileList = glob.glob('{}/*.root'.format(fpath))
     # Newer years have part files nested in daily folders
     if fileList == []:
@@ -60,7 +60,7 @@ if __name__ == "__main__":
     # Additional options
     p.add_argument('-o', '--outdir', dest='outdir',
             # CHANGE: suggested path: /data/user/[username]/maps
-            default='@CRA_BUILD@/maps',
+            default='/data/ana/CosmicRay/Anisotropy/IceTop/ITpass2/output/USER_SPECIFIC_DIR',
             help='Destination directory for output files')
     p.add_argument('--test', dest='test',
             default=False, action='store_true',
@@ -72,23 +72,29 @@ if __name__ == "__main__":
             default=None,
             help='Path to spline files')
     p.add_argument('--cvmfs', dest='cvmfs',
-            default='@CVMFS_SROOTBASE@',
+            default='/cvmfs/icecube.opensciencegrid.org/py3-v4.2.1',
             help='CVMFS environment')
     p.add_argument('--submit_dir', dest='submit_dir',
-            default='@CRA_BUILD@/submit-dir',
+            default='/home/gagrawal/cra-tools-gb-edits/simpledst-maps/src/submit',
             help='submit directory')
     p.add_argument('--smax', dest='smax',
             default=0.0,
-            help='max STA8')
+            help='max stations, noninclusive')
     p.add_argument('--smin', dest='smin',
             default=0.0,
-            help='min STA8')
+            help='min stations, inclusive')
     p.add_argument('--nside', dest='nsideout',
             default=64,
             help='Healpix NSide parameter')
+    p.add_argument('--filter', dest='filter',
+            default=None,
+            help='IceTop energy filter, use smin and smax instead')
     p.add_argument('--condor-priority', dest='priority',
             default=1, 
             help='Job priority in condor')
+    p.add_argument('--method', dest='method', 
+            default=None,
+            help='Method for time - ext (ext?), anti (antisidereal), solar (solar)')
     ### USER-SPECIFIC PATHS (CHANGE) ###
     """ These paths all refer to directories. Make sure you create your
     own directories as needed """
@@ -178,7 +184,7 @@ if __name__ == "__main__":
 
     # Set up parameters to feed C++ script
     print('Parameters for submission:')
-    validArgs  = ['config','smax','smin','nsideout']
+    validArgs  = ['config','smax','smin','nsideout','method']
     c_opts = {k:v for k,v in c_opts.items() if v!=None and k in validArgs}
     for key in sorted(c_opts.keys()):
         print('  --%s %s' % (key, c_opts[key]))
@@ -213,7 +219,7 @@ if __name__ == "__main__":
     for i in range(len(dayFiles)):
 
         jobID = 'makelocalmaps_%s_%05i_%05i' % (args.config, i, random.randint(0,99999))
-        cmd  = '@CRA_BUILD@/bin/make-local-maps' 
+        cmd  = '/home/gagrawal/cra-tools-gb-edits/simpledst-maps/build/bin/make-local-maps' 
         subdir = dateList[i].strftime('%Y-%m-%d')
         ex = [cmd, c_opts,'--outdir','{}/{}'.format(outBase,subdir), '--input', dayFiles[i] ]
         ex = ' '.join(ex)
